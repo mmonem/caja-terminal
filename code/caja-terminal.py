@@ -598,12 +598,12 @@ class CajaTerminalPref(object):
             colors = self._conf['color_palette']
         else:
             colors = PREDEF_PALETTE['Tango']
-        fg = self.clbtnFg.get_color()
-        bg = self.clbtnBg.get_color()
+        fg = Gdk.RGBA().from_color(self.clbtnFg.get_color())
+        bg = Gdk.RGBA().from_color(self.clbtnBg.get_color())
         palette = []
         for i in xrange(16):
-            palette.append(Gdk.color_parse(colors[i]))
-            self.clbtnPalette[i].set_color(palette[i])
+            palette.append(Gdk.RGBA().from_color(Gdk.color_parse(colors[i])))
+            self.clbtnPalette[i].set_color(palette[i].to_color())
         self.demoTerm.set_colors(fg, bg, palette)
 
     def _remove_path_from_list(self, gtktree, gtklist, conflist):
@@ -753,9 +753,9 @@ class CajaTerminal(GObject.GObject, Caja.LocationWidgetProvider):
         terminal.connect("focus", self.on_terminal_need_child,
                 window, terminal, sclwinTerm, path,
                 )
-        terminal.connect("expose-event", self.on_terminal_need_child,
-                window, terminal, sclwinTerm, path,
-                )
+#        terminal.connect("expose-event", self.on_terminal_need_child,
+#                window, terminal, sclwinTerm, path,
+#                )
         terminal.connect("button-press-event", self.on_terminal_need_child,
                 window, terminal, sclwinTerm, path,
                 )
@@ -764,13 +764,13 @@ class CajaTerminal(GObject.GObject, Caja.LocationWidgetProvider):
                 )
         terminal.connect("key-release-event", self.on_terminal_key_release_event)
         #DnD
-        terminal.drag_dest_set(
-                Gtk.DestDefaults.MOTION |
-                Gtk.DestDefaults.HIGHLIGHT |
-                Gtk.DestDefaults.DROP,
-                [('text/uri-list', 0, 80)],
-                Gdk.DragAction.COPY,
-                )
+#        terminal.drag_dest_set(
+#                Gtk.DestDefaults.MOTION |
+#                Gtk.DestDefaults.HIGHLIGHT |
+#                Gtk.DestDefaults.DROP,
+#                [('text/uri-list', 0, 80)],
+#                Gdk.DragAction.COPY,
+#                )
         terminal.connect("drag_motion", self.on_terminal_drag_motion)
         terminal.connect("drag_drop", self.on_terminal_drag_drop)
         terminal.connect("drag_data_received", self.on_terminal_drag_data_received)
@@ -918,12 +918,13 @@ class CajaTerminal(GObject.GObject, Caja.LocationWidgetProvider):
     def on_evResize_enter_notify_event(self, widget, event, rwidget):
         width, height = rwidget.get_size_request()
         rwidget.set_size_request(width, height)
-        cursor = Gdk.Cursor(Gdk.CursorType.SB_V_DOUBLE_ARROW)
-        widget.window.set_cursor(cursor)
+#        cursor = Gdk.Cursor(Gdk.CursorType.SB_V_DOUBLE_ARROW)
+#        widget.window.set_cursor(cursor)
 
     def on_evResize_leave_notify_event(self, widget, event):
-        cursor = Gdk.Cursor(Gdk.CursorType.ARROW)
-        widget.window.set_cursor(cursor)
+        return
+#        cursor = Gdk.Cursor(Gdk.CursorType.ARROW)
+#        widget.window.set_cursor(cursor)
 
     def on_evResize_motion_notify_event(self, widget, event, rwidget, term, window):
         width, height = rwidget.get_size_request()
