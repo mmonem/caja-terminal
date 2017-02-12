@@ -487,7 +487,7 @@ class CajaTerminalPref(object):
 
     def on_clbtnPalette_color_set(self, widget, index=0):
         """General method for on_color_set"""
-        changed_color = str(widget.get_color())
+        changed_color = widget.get_color().to_string()
         if self._conf['color_palettename'] != "Custom":
             self._conf['color_palette'] = list(
                     PREDEF_PALETTE[self._conf['color_palettename']]
